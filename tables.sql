@@ -1,4 +1,4 @@
-drop table if exists articles /*removing all tables if it exists*/ 
+drop table if exists articles; /*removing all tables if it exists*/ 
 create table articles(
     ID smallint unsigned not null auto_increment,
     date_of_publication date not null, /*autoincremented primary key for the data*/
