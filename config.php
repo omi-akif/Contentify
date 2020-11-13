@@ -12,7 +12,7 @@
     define("ADMIN_USERNAME", "root");
     define("ADMIN_PASSWORD", "root");
     
-    require(CLASS_PATH  . "/Article.php");
+    require(CLASS_PATH  . "/articles.php");
 
     function handleException($exception){
         echo "Sorry, a problem occured. Please try later.";
