@@ -1,4 +1,6 @@
 <?php 
+    // Defining all the constant values
+    
     ini_set("display_errors", true);
     date_default_timezone_get("Asia/Dhaka");
 
@@ -12,7 +14,7 @@
     define("ADMIN_USERNAME", "root");
     define("ADMIN_PASSWORD", "root");
     
-    require(CLASS_PATH  . "/articles.php");
+    require(CLASS_PATH  . "/article.php");
 
     function handleException($exception){
         echo "Sorry, a problem occured. Please try later.";
