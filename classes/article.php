@@ -87,7 +87,7 @@
 
         public function insert(){
             if(!is_null($this->ID)){
-                trigger_error("article::insert():ID property already has been set");
+                trigger_error("article::insert():ID property already has been set (to $this-> ID)", E_USER_ERROR);
             }
 
             $connect = new POD(DB_DSN, DB_USERNAME, DB_PASSWORD);
@@ -96,7 +96,7 @@
 
             $string = $connect->prepare($sql);
 
-            $strings->bindValue(":date_of_publication", $this->date_of_publication, PDO::PARAM_INT);
+            $string->bindValue(":date_of_publication", $this->date_of_publication, PDO::PARAM_INT);
             $string->bindValue(":article_title", $this->article_title, PDO::PARAM_STR);
             $string->bindValue(":article_summary", $this->article_summary, PDO::PARAM_STR);
             $tring->bindValue(":article_content", $this->article_content, PDO::PARAM_STR);
@@ -105,6 +105,33 @@
             $this->ID = $connect->lastInsetId();
 
             $connect = null;
+        }
+
+        public function update(){
+            if(is_null($this->ID)){
+                trigger_error("article::update(): Attempt to update an article.", E_USER_ERROR);
+
+
+                $connect = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
+                $sql = "UPDATE articles SET publicationDate = FROM_UNIXTIME(:publicationDate), title=:title, summary=:summary, content=:content WHERE id = :id";
+
+                $string = $connect->prepare($sql);
+                $string->bindValue(":date_of_publication", $this->date_of_publication, PDO::PARAM_INT);
+                $string->bindValue(":article_title", $this->article_title, PDO::PARAM_STR);
+                $string->bindValue(":article_summary", $this->article_summary, PDO::PARAM_STR);
+
+                $string->bindValue(":ID", $this->ID, PDO::PARAM_INT); //bind ID to keep track of contents
+
+                $string->execute();
+
+                $connect = null;
+            }
+        }
+
+        public function delete(){
+            if(is_null($this->ID)){
+                trigger_error("article::delete()")
+            }
         }
     }
 ?>
