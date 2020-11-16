@@ -1,4 +1,4 @@
-<?php include "template/include/header.php"?>
+<?php include "templates/include/header.php"?>
 
 <ul id="headlines">
 
