@@ -10,7 +10,7 @@
                     
                     </span> <!--date of publication-->
 
-                    <a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>">
+                    <a href=".?action=viewArticle&amp;articleId=<?php echo $article->ID?>">
                     
                         <?php echo htmlspecialchars( $article->article_title )?>
                     
