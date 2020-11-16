@@ -23,3 +23,15 @@
   <?php } ?>
 
 </ul>
+
+<p>
+    <?php echo $results['totalRows']?>
+        article
+    <?php echo ($results['toralRows'] != 1) ? 's' : ''?> in total. 
+</p>
+
+<p>
+        <a href="./">Return to Homepage</a>
+</p>
+
+<?php include "templates/include/footer.php"?>
