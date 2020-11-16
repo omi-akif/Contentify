@@ -18,10 +18,10 @@
             break;
         case 'newArticle':
             newArticle();
-            break();
+            break;
         case 'editArticle':
             editArticle();
-            break();
+            break;
         default:
             listArticles();
     }
@@ -36,15 +36,14 @@
                 $_SESSION['username'] = ADMIN_USERNAME;
                 header("Location: admin.php");
             }
-        }
 
-        else{
-            $results['errorMessage'] = "Incorrect username or password. Please try again."
-            require(TEMPLATE_PATH . "/admin/loginForm.php");
+            else{
+                $results['errorMessage'] = "Incorrect username or password. Please try again.";
+                require(TEMPLATE_PATH . "/admin/loginForm.php");
+            }
         }
-
         else{
-            require(TEMPLATE . "/admin/loginForm.php")
+            require(TEMPLATE . "/admin/loginForm.php");
         }
     }
 
