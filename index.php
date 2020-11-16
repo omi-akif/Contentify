@@ -39,6 +39,7 @@
     function homepage(){
         $results = array();
         $data = article::getList(HOMEPAGE_NUM_ARTICLES);
+        
         $results['articles'] = $data['results'];
         $results['totalRows'] = $data['totalRows'];
         $results['pageTitle'] = "Welcome to your page!";
