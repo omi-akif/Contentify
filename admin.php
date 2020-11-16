@@ -1,7 +1,7 @@
 <?php 
     require("config.php");
 
-    session_start();
+    session_start(); //start a user session
     $action = isset($_GET['action']) ? $_SESSION['username'] : "";
 
     if($action != "login" & $action != "logout" && !$username){
