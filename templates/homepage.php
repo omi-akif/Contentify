@@ -1,4 +1,4 @@
-<?php include "./include/header.php" ?>
+<?php include "templates/include/header.php" ?>
 
     <ul id="headlines">
         <?php foreach ($results['articles'] as $article) { ?>
