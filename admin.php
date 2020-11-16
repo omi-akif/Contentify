@@ -68,7 +68,7 @@
         }
         else{
             $results['article'] = new article;
-            require(TEMPLATE_PATH . "/admin/editArticle.php")
+            require(TEMPLATE_PATH . "/admin/editArticle.php");
         }
     }
 
@@ -94,7 +94,7 @@
                 $results['errorMessage'] = "Error: Article Not Found.";
             }
         }
-        if(isset($_GET['status']){
+        if(isset($_GET['status'])){
             if($_GET['status'] == "changesSaved"){
                 $results['statusMessage'] = "Your changes have been saved.";
             }
