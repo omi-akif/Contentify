@@ -130,8 +130,17 @@
 
         public function delete(){
             if(is_null($this->ID)){
-                trigger_error("article::delete()")
+                trigger_error("article::delete() Attempt to delte an article object", E_USER_ERROR);
             }
+
+            $connect = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
+
+            $string = $connect->prepare("DELETE FROM articles WhERE ID = :ID LIMIT 1");
+            $string->bindValue(":ID", $this->ID, PDO::PARAM_INT);
+            $string->execute();
+
+            $connect = null;
+
         }
     }
 ?>
