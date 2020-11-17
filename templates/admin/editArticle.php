@@ -21,4 +21,4 @@
         <?php echo $results['pageTitle'] ?>
     </h1>
 
-    <form action="admin.php?action=<?php echo $results['articles'] -> ID ?>"></form>
+    <form action="admin.php?action=<?php echo $results['articles']->ID ?>"></form>
