@@ -53,4 +53,4 @@
         <a href="admin.php?action=newArticle">Add a new Article</a>
     </p>
 
-    <?php include "templaates/include/footer.php"?>
+    <?php include "templates/include/footer.php"?>
