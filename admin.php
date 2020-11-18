@@ -45,7 +45,7 @@
             }
         }
         else{
-            require(TEMPLATE . "/admin/loginForm.php");
+            require(TEMPLATE_PATH . "/admin/loginForm.php");
         }
     }
 
