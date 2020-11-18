@@ -20,7 +20,7 @@
         $results['articles'] = $data['results'];
         $results['toralRows'] = $data['totalRows'];
         $results['pageTitle'] = "Previous Articles";
-        require(TEMPLAE_PATH . "/archive.php");
+        require(TEMPLATE_PATH . "/archive.php");
     }
 
     function viewArticle(){
