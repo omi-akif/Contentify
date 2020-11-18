@@ -68,7 +68,7 @@
             $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(date_of_publication) AS date_of_publication FROM articles ORDER BY date_of_publication DESC LIMIT :numRows";
             
             $string = $connect->prepare($sql);
-            $string->$bindValue(":numRows", $numRows, PDO::PARAM_INT);
+            $string->bindValue(":numRows", $numRows, PDO::PARAM_INT);
             $string->execute();
             $list = array();
 
