@@ -1,150 +1,163 @@
-<?php 
-    require("config.php");
+<?php
 
-    session_start(); //start a user session
-    $action = isset($_GET['action']) ? $_SESSION['username'] : "";
+require( "config.php" );
+session_start();
+$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+$username = isset( $_SESSION['username'] ) ? $_SESSION['username'] : "";
 
-    $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
+if ( $action != "login" && $action != "logout" && !$username ) {
+  login();
+  exit;
+}
 
-    if($action != "login" & $action != "logout" && !$username){
-        login();
-        exit;
+switch ( $action ) {
+  case 'login':
+    login();
+    break;
+  case 'logout':
+    logout();
+    break;
+  case 'newArticle':
+    newArticle();
+    break;
+  case 'editArticle':
+    editArticle();
+    break;
+  case 'deleteArticle':
+    deleteArticle();
+    break;
+  default:
+    listArticles();
+}
+
+
+function login() {
+
+  $results = array();
+  $results['pageTitle'] = "Admin Login | Widget News";
+
+  if ( isset( $_POST['login'] ) ) {
+
+    // User has posted the login form: attempt to log the user in
+
+    if ( $_POST['username'] == ADMIN_USERNAME && $_POST['password'] == ADMIN_PASSWORD ) {
+
+      // Login successful: Create a session and redirect to the admin homepage
+      $_SESSION['username'] = ADMIN_USERNAME;
+      header( "Location: admin.php" );
+
+    } else {
+
+      // Login failed: display an error message to the user
+      $results['errorMessage'] = "Incorrect username or password. Please try again.";
+      require( TEMPLATE_PATH . "/admin/loginForm.php" );
     }
 
-    switch($action){
-        case 'login':
-            login();
-            break;
+  } else {
 
-        case 'logout':
-            logout();
-            break;
+    // User has not posted the login form yet: display the form
+    require( TEMPLATE_PATH . "/admin/loginForm.php" );
+  }
 
-        case 'newArticle':
-            newArticle();
-            break;
+}
 
-        case 'editArticle':
-            editArticle();
-            break;
 
-        default:
-            listArticles();
+function logout() {
+  unset( $_SESSION['username'] );
+  header( "Location: admin.php" );
+}
+
+
+function newArticle() {
+
+  $results = array();
+  $results['pageTitle'] = "New Article";
+  $results['formAction'] = "newArticle";
+
+  if ( isset( $_POST['saveChanges'] ) ) {
+
+    // User has posted the article edit form: save the new article
+    $article = new article;
+    $article->storeFormValues( $_POST );
+    $article->insert();
+    header( "Location: admin.php?status=changesSaved" );
+
+  } elseif ( isset( $_POST['cancel'] ) ) {
+
+    // User has cancelled their edits: return to the article list
+    header( "Location: admin.php" );
+  } else {
+
+    // User has not posted the article edit form yet: display the form
+    $results['article'] = new article;
+    require( TEMPLATE_PATH . "/admin/editArticle.php" );
+  }
+
+}
+
+
+function editArticle() {
+
+  $results = array();
+  $results['pageTitle'] = "Edit Article";
+  $results['formAction'] = "editArticle";
+
+  if ( isset( $_POST['saveChanges'] ) ) {
+
+    // User has posted the article edit form: save the article changes
+
+    if ( !$article = article::getElementByID( (int)$_POST['articleId'] ) ) {
+      header( "Location: admin.php?error=articleNotFound" );
+      return;
     }
 
-    function login(){
-        $results = array();
-        $results['pageTitle'] = "Welcome Admin";
+    $article->storeFormValues( $_POST );
+    $article->update();
+    header( "Location: admin.php?status=changesSaved" );
 
-        if(isset($_POST['login'])){
+  } elseif ( isset( $_POST['cancel'] ) ) {
 
-            if($_POST['username'] == ADMIN_USERNAME && $_POST['password'] == ADMIN_PASSWORD){
-                $_SESSION['username'] = ADMIN_USERNAME;
-                header("Location: admin.php");
-            }
+    // User has cancelled their edits: return to the article list
+    header( "Location: admin.php" );
+  } else {
 
-            else{
-                $results['errorMessage'] = "Incorrect username or password. Please try again.";
-                require(TEMPLATE_PATH . "/admin/loginForm.php");
-            }
-        }
-        else{
-            require(TEMPLATE_PATH . "/admin/loginForm.php");
-        }
-    }
+    // User has not posted the article edit form yet: display the form
+    $results['article'] = article::getById( (int)$_GET['articleId'] );
+    require( TEMPLATE_PATH . "/admin/editArticle.php" );
+  }
 
-    function logout(){
-        unset($_SESSION['username']);
-        header("Location: admin.php");
-        exit();
-    }
+}
 
-    function newArticle() {
 
-        $results = array();
-        $results['pageTitle'] = "New Article";
-        $results['formAction'] = "newArticle";
-      
-        if ( isset( $_POST['saveChanges'] ) ) {
-      
-          
-          $article = new article;
-          $article->storeFormValues( $_POST );
-          $article->insert();
-          header( "Location: admin.php?status=changesSaved" );
-      
-        } elseif ( isset( $_POST['cancel'] ) ) {
-      
-          
-          header( "Location: admin.php" );
-        } else {
-      
-          // User has not posted the article edit form yet: display the form
-          $results['article'] = new Article;
-          require( TEMPLATE_PATH . "/admin/editArticle.php" );
-        }
-      
-      }
+function deleteArticle() {
 
-    function editArticle(){
-        $results = array();
-        $results['pageTitle'] = "Edit Article";
-        $results['formAction'] = "editArticle";
+  if ( !$article = Article::getElementByID( (int)$_GET['articleId'] ) ) {
+    header( "Location: admin.php?error=articleNotFound" );
+    return;
+  }
 
-        if(isset($_POST['saveChanges'])){
-            
-            if(!$article = article::getElementByID((int)$_POST['articleId'])){
-                header("Location: admin.php?error=articleNotFound");
-                return;
-            }
+  $article->delete();
+  header( "Location: admin.php?status=articleDeleted" );
+}
 
-            $article->storeFormValues($_POST);
-            $article->update();
-            header("Location: admin.php?status=changesSaved");
-        
-        }
 
-        elseif(isset($_POST['cancel'])){
-            header("Location: admin.php");
-        }
+function listArticles() {
+  $results = array();
+  $data = Article::getList();
+  $results['articles'] = $data['results'];
+  $results['totalRows'] = $data['totalRows'];
+  $results['pageTitle'] = "All Articles";
 
-        else{
-            $results['article'] = article::getElementByID((int)$_GET['articleId']);
-            require(TEMPLATE_PATH ."/admin/editArticle.php");
-        }
-    }
+  if ( isset( $_GET['error'] ) ) {
+    if ( $_GET['error'] == "articleNotFound" ) $results['errorMessage'] = "Error: Article not found.";
+  }
 
-    function deleteArticle(){
-        if(!$article = article::getElementByID((int)$_GET['articleId'])){
-            return;
-        }
+  if ( isset( $_GET['status'] ) ) {
+    if ( $_GET['status'] == "changesSaved" ) $results['statusMessage'] = "Your changes have been saved.";
+    if ( $_GET['status'] == "articleDeleted" ) $results['statusMessage'] = "Article deleted.";
+  }
 
-        $article->delete();
-        header("Location: admin.php?status=articleDeleted");
-    }
+  require( TEMPLATE_PATH . "/admin/listArticles.php" );
+}
 
-    function listArticles(){
-        $results = array();
-        $data = article::getList();
-
-        $results['articles'] = $data['results'];
-        $results['totalRows'] = $data['totalRows'];
-        $results['pageTitle'] = "All Articles";
-
-        if(isset($_GET['error'])){
-            if($_GET['error'] == "articleNotFound"){
-                $results['errorMessage'] = "Error: Article Not Found.";
-            }
-        }
-        if(isset($_GET['status'])){
-            if($_GET['status'] == "changesSaved"){
-                $results['statusMessage'] = "Your changes have been saved.";
-            }
-            if($_GET['status'] = articleDeleted){
-                $results['statusMessage'] = "Article deleted.";
-            }
-        }
-
-        require(TEMPLATE_PATH . "/admin/listArticles.php");
-    }
 ?>

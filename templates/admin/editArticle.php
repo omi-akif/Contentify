@@ -1,4 +1,4 @@
-<?php include "template/include/header.php" ?>
+<?php include "templates/include/header.php" ?>
 
     <div id="adminHeader">
         <h2>
@@ -8,7 +8,7 @@
             You are logged in as
 
             <b>
-                <?php echo htmlspecialchars(['username']) ?>
+                <?php echo htmlspecialchars($_SESSION['username']) ?>
             </b>
 
             <a href="admin.php?action=logout">
