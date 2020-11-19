@@ -18,7 +18,7 @@
         $result = array(); //iniatilized array
         $data = article::getList();
         $results['articles'] = $data['results'];
-        $results['toralRows'] = $data['totalRows'];
+        $results['totalRows'] = $data['totalRows'];
         $results['pageTitle'] = "Previous Articles";
         require(TEMPLATE_PATH . "/archive.php");
     }
@@ -31,7 +31,7 @@
 
         $results = array();
         $results['article'] = article::getElementByID((int)$_GET["articleId"]);
-        $results['pageTitle'] = $results['article'] -> title . "Today's blog";
+        $results['pageTitle'] = $results['article']->title . "Today's blog";
         
         require(TEMPLATE_PATH . "/viewArticle.php");
     }
@@ -43,5 +43,6 @@
         $results['articles'] = $data['results'];
         $results['totalRows'] = $data['totalRows'];
         $results['pageTitle'] = "Welcome to your page!";
+        require( TEMPLATE_PATH . "/homepage.php");
     }
 ?>

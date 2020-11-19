@@ -15,15 +15,19 @@
         case 'login':
             login();
             break;
+
         case 'logout':
             logout();
             break;
+
         case 'newArticle':
             newArticle();
             break;
+
         case 'editArticle':
             editArticle();
             break;
+
         default:
             listArticles();
     }
@@ -52,25 +56,61 @@
     function logout(){
         unset($_SESSION['username']);
         header("Location: admin.php");
+        exit();
     }
 
-    function newArticle(){
+    function newArticle() {
+
         $results = array();
-        $results['pageTitle'] == "New Article";
-        $results['formAction'] == "newArticle";
+        $results['pageTitle'] = "New Article";
+        $results['formAction'] = "newArticle";
+      
+        if ( isset( $_POST['saveChanges'] ) ) {
+      
+          
+          $article = new article;
+          $article->storeFormValues( $_POST );
+          $article->insert();
+          header( "Location: admin.php?status=changesSaved" );
+      
+        } elseif ( isset( $_POST['cancel'] ) ) {
+      
+          
+          header( "Location: admin.php" );
+        } else {
+      
+          // User has not posted the article edit form yet: display the form
+          $results['article'] = new Article;
+          require( TEMPLATE_PATH . "/admin/editArticle.php" );
+        }
+      
+      }
+
+    function editArticle(){
+        $results = array();
+        $results['pageTitle'] = "Edit Article";
+        $results['formAction'] = "editArticle";
 
         if(isset($_POST['saveChanges'])){
-            $article = new article;
+            
+            if(!$article = article::getElementByID((int)$_POST['articleId'])){
+                header("Location: admin.php?error=articleNotFound");
+                return;
+            }
+
             $article->storeFormValues($_POST);
-            $article->insert();
+            $article->update();
             header("Location: admin.php?status=changesSaved");
+        
         }
+
         elseif(isset($_POST['cancel'])){
             header("Location: admin.php");
         }
+
         else{
-            $results['article'] = new article;
-            require(TEMPLATE_PATH . "/admin/editArticle.php");
+            $results['article'] = article::getElementByID((int)$_GET['articleId']);
+            require(TEMPLATE_PATH ."/admin/editArticle.php");
         }
     }
 

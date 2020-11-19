@@ -27,7 +27,7 @@
 <p>
     <?php echo $results['totalRows']?>
         article
-    <?php echo ($results['toralRows'] != 1) ? 's' : ''?> in total. 
+    <?php echo ($results['totalRows'] > 0) ? 's' : ''?> in total. 
 </p>
 
 <p>
